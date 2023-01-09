@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@chakra-ui/button";
 import { Checkbox } from "@chakra-ui/checkbox";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -11,19 +10,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { useForm } from "react-hook-form";
-import { SubmitHandler } from "react-hook-form/dist/types";
+import { FieldValues, SubmitHandler } from "react-hook-form/dist/types";
+import { saveResults } from "../model/api";
 
 interface OptionsProps {
   value: string;
   label: string;
-}
-
-interface Data {
-  full_name: string | null;
-  email: string | null;
-  birth_date: string | null;
-  country_of_origin: string | null;
-  terms_and_conditions: boolean;
 }
 
 const schema = yup.object({
@@ -50,7 +42,9 @@ const InputForm = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit: SubmitHandler<Data | any> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FieldValues> = (data: any) => {
+    saveResults(data);
+  };
 
   const elements = (
     param: string,
