@@ -6,7 +6,10 @@ import { Input } from "@chakra-ui/input";
 import { Stack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import db from "../model/db.json";
-import { useForm } from "../hooks/useForm";
+import { useFormHook } from "../hooks/useForm";
+
+import { useForm } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form/dist/types";
 
 interface OptionsProps {
   value: string;
@@ -30,12 +33,13 @@ const initialState: Data = {
 };
 
 const InputForm = () => {
-  const { data, handleChange } = useForm(initialState);
-
-  const handleSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    console.log(data);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  console.log(errors);
+  const onSubmit: SubmitHandler<Data | any> = (data) => console.log(data);
 
   const elements = (
     param: string,
@@ -45,27 +49,45 @@ const InputForm = () => {
     switch (param) {
       case "text":
         return (
-          <Input
-            key={name}
-            required
-            type={param}
-            name={name}
-            onChange={handleChange}
-          />
+          <div>
+            <Input
+              key={name}
+              type={param}
+              {...register(`${name}`, {
+                required: true,
+              })}
+            />
+          </div>
         );
       case "date":
         return (
-          <Input key={name} type={param} name={name} onChange={handleChange} />
+          <Input
+            key={name}
+            type={param}
+            {...register(`${name}`, {
+              required: true,
+            })}
+          />
         );
 
       case "email":
         return (
-          <Input key={name} type={param} name={name} onChange={handleChange} />
+          <Input
+            key={name}
+            type={param}
+            {...register(`${name}`, {
+              required: true,
+            })}
+          />
         );
 
       case "select":
         return (
-          <Select name={name} onChange={handleChange}>
+          <Select
+            {...register(`${name}`, {
+              required: true,
+            })}
+          >
             <option value="">-----</option>
             {options}
           </Select>
@@ -73,7 +95,13 @@ const InputForm = () => {
 
       case "checkbox":
         return (
-          <Checkbox onChange={handleChange} colorScheme="orange" name={name} />
+          <Checkbox
+            {...register(`${name}`, {
+              required: true,
+            })}
+            colorScheme="orange"
+            name={name}
+          />
         );
 
       case "submit":
@@ -101,7 +129,7 @@ const InputForm = () => {
   return (
     <>
       {db.items.map((item) => (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isRequired={item.required}>
             <FormLabel>{item.label === "Enviar" ? null : item.label}</FormLabel>
             {elements(
