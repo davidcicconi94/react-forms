@@ -1,4 +1,4 @@
-import { Flex, Heading, Stack } from "@chakra-ui/react";
+import { Flex, ScaleFade, Stack } from "@chakra-ui/react";
 import InputForm from "../components/Input";
 
 const Form = (): JSX.Element => {
@@ -14,15 +14,6 @@ const Form = (): JSX.Element => {
         my={12}
         bgColor="white"
       >
-        <Heading
-          textAlign={"center"}
-          lineHeight={1.1}
-          fontSize={{ base: "2xl", md: "3xl" }}
-          p={"20px"}
-        >
-          Completar formulario
-        </Heading>
-
         <InputForm />
       </Stack>
     </Flex>

@@ -2,9 +2,10 @@ import { Button } from "@chakra-ui/button";
 import { Checkbox } from "@chakra-ui/checkbox";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { Stack } from "@chakra-ui/layout";
+import { Heading, Stack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import db from "../model/db.json";
+import { Text } from "@chakra-ui/react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,6 +13,15 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { FieldValues, SubmitHandler } from "react-hook-form/dist/types";
 import { saveResults } from "../model/api";
+
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import NotificationForm from "./NotificationForm";
+import { buttonAnimation } from "./animations/animations";
 
 interface OptionsProps {
   value: string;
@@ -36,6 +46,9 @@ const schema = yup.object({
 });
 
 const InputForm = () => {
+  const [submitted, setSubmitted] = useState(false);
+  const animationBtn = `${buttonAnimation} infinite 1s`;
+
   const {
     register,
     handleSubmit,
@@ -44,6 +57,7 @@ const InputForm = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = (data: any) => {
     saveResults(data);
+    setSubmitted(true);
   };
 
   const elements = (
@@ -154,7 +168,7 @@ const InputForm = () => {
               bg={"yellow.500"}
               color={"white"}
               _hover={{
-                bg: "yellow.600",
+                animation: animationBtn,
               }}
               name={name}
               type={param}
@@ -171,22 +185,38 @@ const InputForm = () => {
 
   return (
     <>
-      {db.items.map((item) => (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isRequired={item.required}>
-            <FormLabel>{item.label === "Enviar" ? null : item.label}</FormLabel>
-            {elements(
-              item.type,
-              item.name,
-              item.options?.map((op) => (
-                <option key={op.value} value={op.value}>
-                  {op.label}
-                </option>
-              ))
-            )}
-          </FormControl>
-        </form>
-      ))}
+      {!submitted ? (
+        <>
+          <Heading
+            textAlign={"center"}
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", md: "3xl" }}
+            p={"20px"}
+          >
+            Completar formulario
+          </Heading>
+          {db.items.map((item) => (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl isRequired={item.required}>
+                <FormLabel>
+                  {item.label === "Enviar" ? null : item.label}
+                </FormLabel>
+                {elements(
+                  item.type,
+                  item.name,
+                  item.options?.map((op) => (
+                    <option key={op.value} value={op.value}>
+                      {op.label}
+                    </option>
+                  ))
+                )}
+              </FormControl>
+            </form>
+          ))}
+        </>
+      ) : (
+        <NotificationForm />
+      )}
     </>
   );
 };
