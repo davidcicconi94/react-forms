@@ -1,9 +1,16 @@
-import { Flex, ScaleFade, Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import InputForm from "../components/Input";
 
 const Form = (): JSX.Element => {
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"} bgColor="gray">
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bgImage="linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)) , url('/background_form.jpg')"
+      bgSize="cover"
+      bgRepeat="no-repeat"
+    >
       <Stack
         spacing={8}
         w={"full"}

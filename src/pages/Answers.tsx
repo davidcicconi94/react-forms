@@ -10,12 +10,13 @@ import {
 } from "@chakra-ui/layout";
 import { Button, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import Mailto from "../components/Mailto";
 import { getResults } from "../model/api";
 
 interface Data {
   id: string;
   full_name: string | null;
-  email: string | null;
+  email: string;
   birth_date: string | null;
   country_of_origin: string | null;
   terms_and_conditions: boolean;
@@ -41,17 +42,23 @@ const Answers = () => {
   }, []);
 
   return (
-    <>
+    <div
+      style={{
+        backgroundImage: "url('/background_answers.jpg')",
+        backgroundSize: "cover",
+      }}
+    >
       <Text
         textAlign="center"
         fontSize={{ base: "20px", sm: "30px", md: "40px", lg: "50px" }}
         p={18}
+        letterSpacing={2}
       >
         Lista de usuarios que han completado el formulario
       </Text>
       <Divider />
       {loading ? (
-        <Center flexDir="column" minH={"40vh"}>
+        <Center flexDir="column" minH={"100vh"}>
           <Spinner
             thickness="4px"
             speed="0.65s"
@@ -61,55 +68,69 @@ const Answers = () => {
             alignItems="center"
             label="Loading"
           />
-          <Text>Cargando...</Text>
+          <Text mt="4px" as="b">
+            Cargando...
+          </Text>
         </Center>
       ) : (
-        <Grid
-          templateColumns={{
-            sm: "repeat(1, 1fr)",
-            base: "repeat(1,1fr)",
-            md: "repeat(2 , 1fr)",
-            lg: "repeat(3, 1fr)",
+        <div
+          style={{
+            minHeight: "100vh",
           }}
-          gap={6}
         >
-          {items.map((item: Data) => (
-            <Card
-              borderRadius={10}
-              boxShadow="dark-lg"
-              bgColor={"blackAlpha.300"}
-              key={item.id}
-              p={"40px"}
-              m="50px"
-            >
-              <Text fontSize={"25px"} textAlign={"center"} mb={"20px"}>
-                ID: {item.id}{" "}
-              </Text>
-              <Divider />
-              <CardBody>
-                <Text mb="5px">
-                  <b> Nombre completo: </b> {item.full_name}
+          <Grid
+            templateColumns={{
+              sm: "repeat(1, 1fr)",
+              base: "repeat(1,1fr)",
+              md: "repeat(2 , 1fr)",
+              lg: "repeat(3, 1fr)",
+            }}
+            gap={6}
+          >
+            {items.map((item: Data) => (
+              <Card
+                borderRadius={10}
+                boxShadow="dark-lg"
+                bgColor={"blackAlpha.300"}
+                key={item.id}
+                p={"40px"}
+                m="50px"
+              >
+                <Text fontSize={"25px"} textAlign={"center"} mb={"20px"}>
+                  ID: {item.id}{" "}
                 </Text>
-                <Text mb="5px">
-                  <b> Email: </b> {item.email}
-                </Text>
-                <Text mb="5px">
-                  <b> Fecha de nacimiento: </b> {item.birth_date}
-                </Text>
-                <Text mb="5px">
-                  <b> Nacionalidad: </b> {item.country_of_origin}
-                </Text>
-              </CardBody>
-              <CardFooter>
-                <Button colorScheme="orange" m="auto" variant="outline">
-                  Enviar mail
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </Grid>
+                <Divider />
+                <CardBody>
+                  <Text mb="5px">
+                    <b> Nombre completo: </b> {item.full_name}
+                  </Text>
+                  <Text mb="5px">
+                    <b> Email: </b> {item.email}
+                  </Text>
+                  <Text mb="5px">
+                    <b> Fecha de nacimiento: </b> {item.birth_date}
+                  </Text>
+                  <Text mb="5px">
+                    <b> Nacionalidad: </b> {item.country_of_origin}
+                  </Text>
+                </CardBody>
+                <CardFooter>
+                  <Mailto
+                    email={item.email}
+                    subject="Frontend Developer en Greydive"
+                    body={`¡Gracias por aplicar ${item.full_name}!, nos comunicaremos a la brevedad.`}
+                  >
+                    <Button colorScheme="orange" variant="outline">
+                      Enviar mail
+                    </Button>
+                  </Mailto>
+                </CardFooter>
+              </Card>
+            ))}
+          </Grid>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
