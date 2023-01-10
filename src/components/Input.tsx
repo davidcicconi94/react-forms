@@ -5,45 +5,22 @@ import { Input } from "@chakra-ui/input";
 import { Heading, Stack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import db from "../model/db.json";
-import { Text } from "@chakra-ui/react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { schema } from "./validations/index";
 
 import { useForm } from "react-hook-form";
 import { FieldValues, SubmitHandler } from "react-hook-form/dist/types";
 import { saveResults } from "../model/api";
 
-import { ToastContainer, toast } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import NotificationForm from "./NotificationForm";
 import { buttonAnimation } from "./animations/animations";
+import { useState } from "react";
 
 interface OptionsProps {
   value: string;
   label: string;
 }
-
-const schema = yup.object({
-  full_name: yup.string().required("Por favor, ingrese su nombre y apellido."),
-  birth_date: yup
-    .string()
-    .required("Por favor, ingrese su fecha de nacimiento."),
-  email: yup
-    .string()
-    .email("Formato de correo erróneo.")
-    .required("Por favor, ingrese su correo electrónico"),
-  country_of_origin: yup
-    .string()
-    .required("Por favor, ingrese su país de origen"),
-  terms_and_conditions: yup
-    .bool()
-    .oneOf([true], "Debes aceptar los términos y condiciones"),
-});
 
 const InputForm = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -151,12 +128,11 @@ const InputForm = () => {
               name={name}
             />
             <>
-              {" "}
               {errors?.terms_and_conditions && (
                 <p
                   style={{ color: "red", marginTop: "7px" }}
                 >{`${errors?.terms_and_conditions?.message}`}</p>
-              )}{" "}
+              )}
             </>
           </div>
         );

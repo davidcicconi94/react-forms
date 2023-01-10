@@ -1,6 +1,4 @@
-import { Button } from "@chakra-ui/react";
 import React from "react";
-import { Link } from "react-router-dom";
 
 interface MailProps {
   email: string;
